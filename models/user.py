@@ -1,7 +1,7 @@
 # models/user.py
 
 from sqlalchemy import Column, Integer, String
-from database import Base  # Import Base from database.py
+from models.base import BaseModel  # Import BaseModel from base.py
 from passlib.context import CryptContext
 from datetime import datetime, timezone, timedelta  # New import for timestamps
 from jose import jwt
@@ -10,11 +10,10 @@ from jose import jwt
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 from config.environment import secret
 
-class UserModel(Base):
+class UserModel(BaseModel):
 
     __tablename__ = "users"
 
-    id = Column(Integer, primary_key=True, index=True)
     username = Column(String, nullable=False, unique=True)
     email = Column(String, nullable=False, unique=True)
     password_hash = Column(String, nullable=True)  # Add new field for storing the hashed password
