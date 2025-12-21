@@ -12,6 +12,7 @@ passlib = "*"
 python-jose = "*"
 python-dotenv = "*"
 alembic = "*"
+pydantic = "*"
 
 [dev-packages]
 
