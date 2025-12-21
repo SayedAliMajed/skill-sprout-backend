@@ -17,6 +17,7 @@ class UserModel(BaseModel):
     username = Column(String, nullable=False, unique=True)
     email = Column(String, nullable=False, unique=True)
     password_hash = Column(String, nullable=True)  # Add new field for storing the hashed password
+    bio = Column(String)
 
     # Method to hash and store the password
     def set_password(self, password: str):
