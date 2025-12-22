@@ -15,5 +15,12 @@ class LessonResponse(BaseModel):
     order_index: int
     content_text: Optional[str] = None
 
+class LessonUpdate(BaseModel):  
+    title: Optional[str] = None
+    video_url: Optional[str] = None
+    order_index: Optional[int] = None
+    content_text: Optional[str] = None
+
+
     class Config:
         from_attributes = True
