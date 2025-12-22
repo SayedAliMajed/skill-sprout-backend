@@ -2,8 +2,8 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from typing import List
 
-from models.Lesson import LessonModel
-from models.course import CourseModel
+from models.lesson import LessonModel
+#from models.course import CourseModel
 from models.user import UserModel
 from serializers.lesson import LessonCreate, LessonResponse, LessonUpdate
 from database import get_db
@@ -59,7 +59,7 @@ def update_lesson(
     lesson_id: int,
     lesson_update: LessonUpdate,
     db: Session = Depends(get_db),
-    current_user = UserModel = Depends(get_current_user)
+    current_user: UserModel = Depends(get_current_user)
 ):
     lesson = db.query(LessonModel).filter(LessonModel.id == lesson_id).first()
     if not lesson:
