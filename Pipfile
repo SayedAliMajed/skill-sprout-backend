@@ -5,16 +5,18 @@ name = "pypi"
 
 [packages]
 fastapi = "*"
-uvicorn = "*"
 sqlalchemy = "*"
 psycopg2-binary = "*"
-passlib = "*"
-PyJWT = "*"
 python-dotenv = "*"
 alembic = "*"
 pydantic = "*"
+uvicorn = {extras = ["standard"], version = "*"}
+python-jose = {extras = ["cryptography"], version = "*"}
+passlib = {extras = ["bcrypt"], version = "*"}
+pyjwt = "*"
+python-multipart = "*"
 
 [dev-packages]
 
 [requires]
-python_version = "3.11"
+python_version = "3.12.3"

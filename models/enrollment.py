@@ -1,9 +1,9 @@
 from sqlalchemy import Column, Integer, ForeignKey, Float, UniqueConstraint, func, DateTime
 from sqlalchemy.orm import relationship
-from database import Base
+from models.base import BaseModel
 
 
-class EnrollmentModel(Base):
+class EnrollmentModel(BaseModel):
     __tablename__ = "enrollments"
 
     # ForeignKey (user)
@@ -20,7 +20,7 @@ class EnrollmentModel(Base):
     progress_percent = Column(Float, default=0.0, nullable=False)
 
     # Prevent duplicate enrollment
-    __table_args__ = (UniqueConstraint("user_id", "course_id", name="uq_user_course_enrollment"))
+    __table_args__ = (UniqueConstraint("user_id", "course_id", name="uq_user_course_enrollment"),)
 
     # Relationships
     user = relationship("UserModel", back_populates="enrollments")

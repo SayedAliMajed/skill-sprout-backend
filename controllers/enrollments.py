@@ -5,7 +5,7 @@ from database import get_db
 from models.enrollment import EnrollmentModel
 # from models.course import Course
 from models.user import UserModel
-from dependencies import get_current_user
+from dependencies.get_current_user import get_current_user
 
 router = APIRouter()
 
