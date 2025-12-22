@@ -6,6 +6,7 @@ import uvicorn
 from contextlib import asynccontextmanager
 
 from controllers.users import router as UserRouter
+from controllers.enrollments import router as EnrollmentRouter
 from database import engine, Base
 from config.environment import ENVIRONMENT, CORS_ORIGINS
 
@@ -55,6 +56,7 @@ app.add_middleware(
 
 # Include routers
 app.include_router(UserRouter, prefix="/api")
+app.include_router(EnrollmentRouter, prefix="/api")
 
 @app.get('/')
 def home():
