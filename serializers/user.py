@@ -7,7 +7,7 @@ class UserSchema(BaseModel):
     email: str  # User's email address
     password: str  # Plain text password for user registration (will be hashed before saving)
 
-class Config:
+    class Config:
         from_attributes = True  # Updated for Pydantic v2
 
 # Schema for returning user data (without exposing the password)

@@ -4,14 +4,17 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
+alembic = "*"
 fastapi = "*"
 uvicorn = "*"
 sqlalchemy = "*"
 psycopg2-binary = "*"
-passlib = "*"
-python-jose = "*"
+python-jose = {extras = ["cryptography"], version = "*"}
+passlib = {extras = ["bcrypt"], version = "*"}
+pyjwt = "*"
+pydantic = "*"
+python-multipart = "*"
 python-dotenv = "*"
-alembic = "*"
 
 [dev-packages]
 

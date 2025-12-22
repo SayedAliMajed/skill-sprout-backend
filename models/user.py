@@ -1,23 +1,22 @@
 # models/user.py
 
-from sqlalchemy import Column, Integer, String
-from database import Base  # Import Base from database.py
+from sqlalchemy.orm import Mapped, mapped_column
+from models.base import BaseModel  # Import BaseModel instead of Base
 from passlib.context import CryptContext
-from datetime import datetime, timezone, timedelta  # New import for timestamps
+from datetime import datetime, timezone, timedelta
 from jose import jwt
 
 # Creating a password hashing context using bcrypt
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 from config.environment import secret
 
-class UserModel(Base):
+class UserModel(BaseModel):
 
     __tablename__ = "users"
 
-    id = Column(Integer, primary_key=True, index=True)
-    username = Column(String, nullable=False, unique=True)
-    email = Column(String, nullable=False, unique=True)
-    password_hash = Column(String, nullable=True)  # Add new field for storing the hashed password
+    username: Mapped[str] = mapped_column(nullable=False, unique=True)
+    email: Mapped[str] = mapped_column(nullable=False, unique=True)
+    password_hash: Mapped[str] = mapped_column(nullable=True)  # Field for storing the hashed password
 
     # Method to hash and store the password
     def set_password(self, password: str):
