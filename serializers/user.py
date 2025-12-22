@@ -9,7 +9,7 @@ class UserSchema(BaseModel):
     role: str = "student"
     bio: str
 
-class Config:
+    class Config:
         from_attributes = True  # Updated for Pydantic v2
 
 # Schema for returning user data (without exposing the password)

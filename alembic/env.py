@@ -29,6 +29,7 @@ def get_url():
     from dotenv import load_dotenv
     import os
     load_dotenv()
+
     return os.getenv("DATABASE_URL", "postgresql://ali:123@localhost:5432/skill_db")
 
 def run_migrations_offline() -> None:

@@ -1,11 +1,8 @@
-# models/user.py
-
-from sqlalchemy import Column, Integer, String
-from sqlalchemy.orm import relationship
-from models.base import BaseModel  # Import BaseModel from base.py
+from sqlalchemy.orm import Mapped, mapped_column
+from models.base import BaseModel  # Import BaseModel instead of Base
 from passlib.context import CryptContext
 from datetime import datetime, timezone, timedelta  # New import for timestamps
-import jwt
+from jose import jwt
 
 # Creating a password hashing context using bcrypt
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -33,7 +30,6 @@ class UserModel(BaseModel):
         return pwd_context.verify(password, self.password_hash)
 
     def generate_token(self):
-        from config.environment import secret
         payload = {
             "exp": datetime.now(timezone.utc) + timedelta(days=1),
             "iat": datetime.now(timezone.utc),

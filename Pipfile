@@ -4,9 +4,11 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
+alembic = "*"
 fastapi = "*"
 sqlalchemy = "*"
 psycopg2-binary = "*"
+<<<<<<< HEAD
 python-dotenv = "*"
 alembic = "*"
 pydantic = "*"
@@ -15,6 +17,14 @@ python-jose = {extras = ["cryptography"], version = "*"}
 passlib = {extras = ["bcrypt"], version = "*"}
 pyjwt = "*"
 python-multipart = "*"
+=======
+python-jose = {extras = ["cryptography"], version = "*"}
+passlib = {extras = ["bcrypt"], version = "*"}
+pyjwt = "*"
+pydantic = "*"
+python-multipart = "*"
+python-dotenv = "*"
+>>>>>>> eb0ee7f7ccc3be10c1e7df6b636dff69b08a3444
 
 [dev-packages]
 

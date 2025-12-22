@@ -1,7 +1,11 @@
 {
     "_meta": {
         "hash": {
+<<<<<<< HEAD
             "sha256": "b8ee278a0b41383ea6c13bac1646da0ba6cde78a653585c10308b9bb36e5a99d"
+=======
+            "sha256": "70b45413a45eaa1f5f398f4cfcd63ca532c81e02cdfeac7cd3b92163a9736601"
+>>>>>>> eb0ee7f7ccc3be10c1e7df6b636dff69b08a3444
         },
         "pipfile-spec": 6,
         "requires": {
@@ -115,6 +119,10 @@
                 "sha256:f8429e1c410b4073944f03bd778a9e066e7fad723564a52ff91841d278dfc822",
                 "sha256:fc746432b951e92b58317af8e0ca746efe93e66555f1b40888865ef5bf56446b"
             ],
+<<<<<<< HEAD
+=======
+            "markers": "python_version >= '3.8'",
+>>>>>>> eb0ee7f7ccc3be10c1e7df6b636dff69b08a3444
             "version": "==5.0.0"
         },
         "cffi": {
@@ -204,7 +212,11 @@
                 "sha256:fc7de24befaeae77ba923797c7c87834c73648a05a4bde34b3b7e5588973a453",
                 "sha256:fe562eb1a64e67dd297ccc4f5addea2501664954f2692b69a76449ec7913ecbf"
             ],
+<<<<<<< HEAD
             "markers": "python_full_version >= '3.9' and platform_python_implementation != 'PyPy'",
+=======
+            "markers": "python_version >= '3.9'",
+>>>>>>> eb0ee7f7ccc3be10c1e7df6b636dff69b08a3444
             "version": "==2.0.0"
         },
         "click": {
@@ -272,6 +284,10 @@
                 "sha256:ef639cb3372f69ec44915fafcd6698b6cc78fbe0c2ea41be867f6ed612811963",
                 "sha256:f260d0d41e9b4da1ed1e0f1ce571f97fe370b152ab18778e9e8f67d6af432018"
             ],
+<<<<<<< HEAD
+=======
+            "markers": "python_version >= '3.8' and python_full_version not in '3.9.0, 3.9.1'",
+>>>>>>> eb0ee7f7ccc3be10c1e7df6b636dff69b08a3444
             "version": "==46.0.3"
         },
         "ecdsa": {
@@ -609,7 +625,11 @@
                 "sha256:78816d4f24add8f10a06d6f05b4d424ad9e96cfebf68a4ddc99c65c0720d00c2",
                 "sha256:e5c6e8d3fbad53479cab09ac03729e0a9faf2bee3db8208a550daf5af81a5934"
             ],
+<<<<<<< HEAD
             "markers": "implementation_name != 'PyPy'",
+=======
+            "markers": "python_version >= '3.8'",
+>>>>>>> eb0ee7f7ccc3be10c1e7df6b636dff69b08a3444
             "version": "==2.23"
         },
         "pydantic": {
@@ -786,6 +806,7 @@
             "markers": "python_version >= '3.10'",
             "version": "==0.0.21"
         },
+<<<<<<< HEAD
         "pyyaml": {
             "hashes": [
                 "sha256:00c4bdeba853cc34e7dd471f16b4114f4162dc03e6b7afcc2128711f0eca823c",
@@ -864,6 +885,8 @@
             ],
             "version": "==6.0.3"
         },
+=======
+>>>>>>> eb0ee7f7ccc3be10c1e7df6b636dff69b08a3444
         "rsa": {
             "hashes": [
                 "sha256:68635866661c6836b8d39430f97a996acbd61bfa49406748ea243539fe239762",
