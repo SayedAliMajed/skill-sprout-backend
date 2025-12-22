@@ -6,6 +6,8 @@ class UserSchema(BaseModel):
     username: str  # User's unique name
     email: str  # User's email address
     password: str  # Plain text password for user registration (will be hashed before saving)
+    role: str = "student"
+    bio: str
 
     class Config:
         from_attributes = True  # Updated for Pydantic v2
