@@ -9,18 +9,12 @@ from models.enrollment import EnrollmentModel
 from models.course import CourseModel
 from models.user import UserModel
 from dependencies.get_current_user import get_current_user
+from serializers.review import ReviewCreateSchema, ReviewResponseSchema
 
 router = APIRouter()
 
-@router.post("/{course_id}/reviews", status_code=status.HTTP_200_OK)
-def create_or_update_review(course_id: int, rating: float, comment: str | None = None, db: Session = Depends(get_db), current_user: UserModel = Depends(get_current_user)):
-    
-    # Validate rating early
-    if rating < 1.0 or rating > 5.0:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Rating must be between 1.0 and 5.0",
-        )
+@router.post("/{course_id}/reviews", response_model=ReviewResponseSchema, status_code=status.HTTP_200_OK)
+def create_or_update_review(course_id: int, review_data: ReviewCreateSchema, db: Session = Depends(get_db), current_user: UserModel = Depends(get_current_user)):
 
     # Check course exists
     course = db.query(CourseModel).filter(CourseModel.id == course_id).first()
@@ -51,30 +45,21 @@ def create_or_update_review(course_id: int, rating: float, comment: str | None =
     )
 
     if review:
-        review.rating = rating
-        review.comment = comment
-        message = "Review updated"
+        review.rating = review_data.rating
+        review.comment = review_data.comment
     else:
         review = ReviewModel(
             course_id=course_id,
             user_id=current_user.id,
-            rating=rating,
-            comment=comment,
+            rating=review_data.rating,
+            comment=review_data.comment,
         )
         db.add(review)
-        message = "Review created"
 
     db.commit()
     db.refresh(review)
 
-    return {
-        "message": message,
-        "review": {
-            "id": review.id,
-            "rating": review.rating,
-            "comment": review.comment,
-        },
-    }
+    return review
 
 @router.get("/{course_id}/reviews")
 def get_course_reviews(course_id: int, db: Session = Depends(get_db)):
