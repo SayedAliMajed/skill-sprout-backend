@@ -8,12 +8,12 @@ uvicorn = "*"
 sqlalchemy = "*"
 psycopg2-binary = "*"
 alembic = "*"
-python-jose = {extras = ["cryptography"], version = "*"}
 passlib = {extras = ["bcrypt"], version = "*"}
 pyjwt = "*"
 pydantic = "*"
 python-multipart = "*"
 python-dotenv = "*"
+python-jose = {extras = ["cryptography"], version = "*"}
 
 [dev-packages]
 
