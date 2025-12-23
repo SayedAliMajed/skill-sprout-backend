@@ -1,9 +1,10 @@
 # models/user.py
 
-from sqlalchemy.orm import Mapped, mapped_column
-from models.base import BaseModel  # Import BaseModel instead of Base
+from sqlalchemy import Column, Integer, String
+from sqlalchemy.orm import relationship
+from models.base import BaseModel  # Import BaseModel from base.py
 from passlib.context import CryptContext
-from datetime import datetime, timezone, timedelta
+from datetime import datetime, timezone, timedelta  # New import for timestamps
 from jose import jwt
 
 # Creating a password hashing context using bcrypt
@@ -14,9 +15,14 @@ class UserModel(BaseModel):
 
     __tablename__ = "users"
 
-    username: Mapped[str] = mapped_column(nullable=False, unique=True)
-    email: Mapped[str] = mapped_column(nullable=False, unique=True)
-    password_hash: Mapped[str] = mapped_column(nullable=True)  # Field for storing the hashed password
+    username = Column(String, nullable=False, unique=True)
+    email = Column(String, nullable=False, unique=True)
+    password_hash = Column(String, nullable=True)  # Add new field for storing the hashed password
+    role = Column(String, nullable=False)
+    bio = Column(String)
+    
+
+    courses = relationship("CourseModel", back_populates="instructor")
 
     # Method to hash and store the password
     def set_password(self, password: str):
@@ -26,6 +32,7 @@ class UserModel(BaseModel):
         return pwd_context.verify(password, self.password_hash)
 
     def generate_token(self):
+        from config.environment import secret
         payload = {
             "exp": datetime.now(timezone.utc) + timedelta(days=1),
             "iat": datetime.now(timezone.utc),

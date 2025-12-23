@@ -31,7 +31,8 @@ venv/
 env/
 ENV/
 .venv/
-
+config/
+environment.py/
 # IDEs
 .vscode/
 .idea/
@@ -70,3 +71,8 @@ Thumbs.db
 
 # pyenv
 .python-version
+
+# Environment
+.env
+.venv/
+Pipfile.lock  # Optional

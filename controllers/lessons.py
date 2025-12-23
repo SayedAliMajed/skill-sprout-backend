@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from typing import List
 
 from models.lesson import LessonModel
-#from models.course import CourseModel
+from models.course import CourseModel
 from models.user import UserModel
 from serializers.lesson import LessonCreate, LessonResponse, LessonUpdate
 from database import get_db

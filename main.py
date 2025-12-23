@@ -4,14 +4,15 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from controllers.users import router as UserRouter
 from controllers.courses import router as CourseRouter
-from database import engine
-from models.base import BaseModel
+from controllers.lessons import router as LessonsRouter
+from database import engine, Base
 # Import all models to ensure tables are created
 from models.user import UserModel
 from models.course import CourseModel
+from models.lesson import LessonModel
 
 # Create all database tables
-BaseModel.metadata.create_all(bind=engine)
+Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="SkillSprout API", version="1.0.0")
 
@@ -27,6 +28,7 @@ app.add_middleware(
 # Include routers
 app.include_router(UserRouter, prefix="/api/users", tags=["Users"])
 app.include_router(CourseRouter, prefix="/api/courses", tags=["Courses"])
+app.include_router(LessonsRouter, prefix= "/api/lessons", tags=["Lessons"])
 
 @app.get('/')
 def home():

@@ -29,7 +29,7 @@ def get_url():
     from dotenv import load_dotenv
     import os
     load_dotenv()
-    return os.getenv("DATABASE_URL", "postgresql://abdulla:36230033@localhost:5432/skill_db")
+    return os.getenv("DATABASE_URL", "postgresql://sayed:123@localhost:5432/skill_db")
 
 def run_migrations_offline() -> None:
     """Run migrations in 'offline' mode.
