@@ -13,11 +13,9 @@ pyjwt = "*"
 pydantic = "*"
 python-multipart = "*"
 python-dotenv = "*"
-<<<<<<< HEAD
 bcrypt = "<4.0"
-=======
+
 python-jose = {extras = ["cryptography"], version = "*"}
->>>>>>> a21d7824fc5d71051d7107eed705bfbd6eba04c1
 
 [dev-packages]
 
