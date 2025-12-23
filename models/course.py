@@ -16,7 +16,13 @@ class CourseModel(BaseModel):
     thumbnail_url: Mapped[Optional[str]] = mapped_column(String(500), nullable=True, default="")
 
     # Relationship to User (instructor)
-    instructor = relationship("UserModel", backref="courses")
+    instructor = relationship("UserModel", back_populates="courses")
     
     # Relationship to EnrollmentModel
     enrollments = relationship("EnrollmentModel", back_populates="course")
+    
+    # Relationship to LessonModel
+    lessons = relationship("LessonModel", back_populates="course")
+    
+    # Relationship to ReviewModel
+    reviews = relationship("ReviewModel", back_populates="course")

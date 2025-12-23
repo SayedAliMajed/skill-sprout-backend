@@ -9,7 +9,6 @@ from jose import jwt
 
 # Creating a password hashing context using bcrypt
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-from config.environment import secret
 
 class UserModel(BaseModel):
 
@@ -23,6 +22,8 @@ class UserModel(BaseModel):
     
 
     courses = relationship("CourseModel", back_populates="instructor")
+    enrollments = relationship("EnrollmentModel", back_populates="user")
+    reviews = relationship("ReviewModel", back_populates="user")
 
     # Method to hash and store the password
     def set_password(self, password: str):
@@ -36,7 +37,7 @@ class UserModel(BaseModel):
         payload = {
             "exp": datetime.now(timezone.utc) + timedelta(days=1),
             "iat": datetime.now(timezone.utc),
-            "sub": self.id
+            "sub": str(self.id)
         }
 
         token = jwt.encode(payload, secret, algorithm="HS256")

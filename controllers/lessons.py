@@ -5,14 +5,16 @@ from typing import List
 from models.lesson import LessonModel
 from models.course import CourseModel
 from models.user import UserModel
+from models.enrollment import EnrollmentModel
 from serializers.lesson import LessonCreate, LessonResponse, LessonUpdate
 from database import get_db
 from dependencies.get_current_user import get_current_user
 
 router = APIRouter()
 
-@router.post("/", response_model=LessonResponse)
+@router.post("/courses/{course_id}", response_model=LessonResponse)
 def create_lesson(
+    course_id: int,
     lesson_in: LessonCreate,
     db: Session = Depends(get_db),
     current_user: UserModel = Depends(get_current_user)
@@ -20,7 +22,7 @@ def create_lesson(
     
      # Verify course exists and user owns it
     course = db.query(CourseModel).filter(
-        CourseModel.id == lesson_in.course_id,
+        CourseModel.id == course_id,
         CourseModel.instructor_id == current_user.id
     ).first()
     
@@ -28,7 +30,7 @@ def create_lesson(
         raise HTTPException(status_code=404, detail="Course not found")
     
     # Create a new lesson in the database
-    new_lesson = LessonModel(**lesson_in.dict(), course_id=lesson_in.course_id)
+    new_lesson = LessonModel(**lesson_in.dict(), course_id=course_id)
     db.add(new_lesson)
     db.commit()
     db.refresh(new_lesson)
@@ -40,13 +42,13 @@ def get_lessons(course_id: int,
                 current_user: UserModel = Depends(get_current_user)
                 ):
     
-    enrollment = db.query(Enrollment.Model).filter(
+    enrollment = db.query(EnrollmentModel).filter(
         EnrollmentModel.user_id == current_user.id,
         EnrollmentModel.course_id == course_id     
     ).first()
 
     if not enrollment:
-        raise HTTPException(status_code=403, details="Enroll in course first")
+        raise HTTPException(status_code=403, detail="Enroll in course first")
     
     lessons = db.query(LessonModel).filter(
         LessonModel.course_id == course_id
@@ -101,6 +103,3 @@ def delete_lesson(
     db.delete(lesson)
     db.commit()
     return {"message": "Lesson deleted succesfully"}
-
-   
-    

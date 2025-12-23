@@ -1,7 +1,6 @@
 from sqlalchemy import Column, String, Integer, Float, ForeignKey
 from sqlalchemy.orm import relationship
 from models.base import BaseModel 
-from models.course import CourseModel
 
 class LessonModel(BaseModel):
     __tablename__ = "lessons"
@@ -13,4 +12,3 @@ class LessonModel(BaseModel):
     course_id = Column(Integer, ForeignKey("courses.id"), nullable=False, index=True)
 
     course = relationship("CourseModel", back_populates="lessons")
-    
