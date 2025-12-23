@@ -31,8 +31,7 @@ venv/
 env/
 ENV/
 .venv/
-config/
-environment.py/
+config/environment.py
 # IDEs
 .vscode/
 .idea/
@@ -61,6 +60,7 @@ logs/
 
 # Alembic
 alembic/versions/
+alembic/env.py
 
 # OS
 .DS_Store
