@@ -4,6 +4,7 @@ from controllers.users import router as UserRouter
 from controllers.courses import router as CourseRouter
 from controllers.lessons import router as LessonsRouter
 from controllers.enrollments import router as EnrollmentRouter
+from controllers.reviews import router as ReviewsRouter
 from database import engine, Base
 from config.environment import ENVIRONMENT, CORS_ORIGINS
 
@@ -31,6 +32,7 @@ app.include_router(UserRouter, prefix="/api/users", tags=["Users"])
 app.include_router(CourseRouter, prefix="/api/courses", tags=["Courses"])
 app.include_router(LessonsRouter, prefix="/api/lessons", tags=["Lessons"])
 app.include_router(EnrollmentRouter, prefix="/api/enrollments", tags=["Enrollments"])
+app.include_router(ReviewsRouter, prefix="/api/enrollments", tags=["Enrollments"])
 
 @app.get('/')
 def home():
