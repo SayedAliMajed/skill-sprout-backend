@@ -17,3 +17,6 @@ class CourseModel(BaseModel):
 
     # Relationship to User (instructor)
     instructor = relationship("UserModel", backref="courses")
+    
+    # Relationship to EnrollmentModel
+    enrollments = relationship("EnrollmentModel", back_populates="course")

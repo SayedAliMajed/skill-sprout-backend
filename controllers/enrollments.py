@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 
 from database import get_db
 from models.enrollment import EnrollmentModel
-from models.course import Course
+from models.course import CourseModel
 from models.user import UserModel
 from dependencies.get_current_user import get_current_user
 
