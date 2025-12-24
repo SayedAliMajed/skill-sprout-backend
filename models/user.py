@@ -16,6 +16,8 @@ class UserModel(BaseModel):
 
     username = Column(String, nullable=False, unique=True)
     email = Column(String, nullable=False, unique=True)
+    first_name = Column(String(100), nullable=False)
+    last_name = Column(String(100), nullable=False) 
     password_hash = Column(String, nullable=True)  # Add new field for storing the hashed password
     role = Column(String, nullable=False)
     bio = Column(String)
