@@ -96,13 +96,20 @@ def get_course(course_id: int, db: Session = Depends(get_db)):
         } if course.instructor else None
     }
 
-# POST /courses - Create a new course (authenticated users only)
+# POST /courses - Create a new course (instructors only)
 @router.post("/", response_model=CourseResponseSchema, status_code=status.HTTP_201_CREATED)
 def create_course(
     course: CourseCreateSchema,
     db: Session = Depends(get_db),
     current_user: UserModel = Depends(get_current_user)
 ):
+    # Check if user is instructor
+    if current_user.role != "instructor":
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Only instructors can create courses"
+        )
+    
     # Create new course with current user as instructor
     new_course = CourseModel(
         instructor_id=current_user.id,
