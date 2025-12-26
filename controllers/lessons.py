@@ -56,6 +56,23 @@ def get_lessons(course_id: int,
 
     return lessons
 
+# New public route for course preview (no enrollment required)
+@router.get("/course/{course_id}/public", response_model=List[LessonResponse])
+def get_public_lessons(course_id: int, db: Session = Depends(get_db)):
+    
+    # Check if course exists
+    course = db.query(CourseModel).filter(CourseModel.id == course_id).first()
+    if not course:
+        raise HTTPException(status_code=404, detail="Course not found")
+    
+    lessons = db.query(LessonModel).filter(
+        LessonModel.course_id == course_id
+    ).order_by(LessonModel.order_index).all()
+
+    # For public view, return lessons but with limited content if needed
+    # You can customize this based on your business logic
+    return lessons
+
 @router.patch("/{lesson_id}", response_model=LessonResponse)
 def update_lesson(
     lesson_id: int,

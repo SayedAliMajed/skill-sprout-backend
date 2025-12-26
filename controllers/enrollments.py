@@ -11,7 +11,7 @@ from serializers.enrollment import ProgressUpdateSchema, EnrollmentResponseSchem
 
 router = APIRouter()
 
-# Enroll user to a course
+# Enroll user to a course (existing route)
 @router.post("/enroll/{course_id}", response_model=EnrollmentResponseSchema, status_code=status.HTTP_201_CREATED)
 def enroll_in_course(course_id: int, db: Session = Depends(get_db), current_user: UserModel = Depends(get_current_user)):
 
@@ -48,6 +48,75 @@ def enroll_in_course(course_id: int, db: Session = Depends(get_db), current_user
 
     return enrollment
 
+# New route: Enroll user to a course (POST /api/enrollments with course_id in body)
+@router.post("/", response_model=EnrollmentResponseSchema, status_code=status.HTTP_201_CREATED)
+def enroll_in_course_body(course_data: dict, db: Session = Depends(get_db), current_user: UserModel = Depends(get_current_user)):
+
+    # User role check
+    if current_user.role != "student":
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Only students can enroll in courses"
+        )
+
+    # Extract course_id from request body
+    course_id = course_data.get("course_id")
+    if not course_id:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="course_id is required in request body"
+        )
+
+    # check if already enrolled
+    existing_enrollment = ( db.query(EnrollmentModel).filter(
+            EnrollmentModel.user_id == current_user.id,
+            EnrollmentModel.course_id == course_id
+        )
+        .first()
+    )
+
+    if existing_enrollment:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Already enrolled in this course"
+        )
+
+    # Check if course exists
+    course = db.query(CourseModel).filter(CourseModel.id == course_id).first()
+    if not course:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Course not found"
+        )
+
+    # create enrollment
+    enrollment = EnrollmentModel(
+        user_id=current_user.id,
+        course_id=course_id
+    )
+
+    db.add(enrollment)
+    db.commit()
+    db.refresh(enrollment)
+
+    return enrollment
+
+# Check enrollment status for a specific course
+@router.get("/course/{course_id}/status")
+def check_enrollment_status(course_id: int, db: Session = Depends(get_db), current_user: UserModel = Depends(get_current_user)):
+
+    # Check if user is enrolled in the course
+    enrollment = ( db.query(EnrollmentModel).filter(
+            EnrollmentModel.user_id == current_user.id,
+            EnrollmentModel.course_id == course_id
+        )
+        .first()
+    )
+
+    return {
+        "enrolled": enrollment is not None,
+        "course_id": course_id
+    }
 
 # get all the enrollments for a User
 @router.get("/me", response_model=List[EnrollmentListItemSchema])
