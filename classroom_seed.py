@@ -313,3 +313,39 @@ def verify_seeding(db_session):
         
         print(f"\n✅ Seeding verification complete!")
         print(f"🎯 System ready with {courses_count} courses, {lessons_count} lessons!")
+        
+    except Exception as e:
+        print(f"❌ Error verifying seeding: {e}")
+
+def main():
+    """Main function to run the complete seeding process"""
+    print_banner()
+    
+    # Initialize database connection
+    db = SessionLocal()
+    
+    try:
+        # Run all seeding steps in order
+        cleanup_test_data(db)
+        simple_seed_categories(db)
+        simple_seed_instructors(db)
+        simple_seed_courses(db)
+        simple_seed_lessons(db)
+        verify_seeding(db)
+        
+        print("\n🎉 CLASSROOM SEEDING COMPLETED SUCCESSFULLY!")
+        print("📚 Your SkillSprout database is now populated with real educational content")
+        print("💰 All courses use BD currency formatting")
+        print("🎥 YouTube thumbnails are ready for automatic display")
+        print("👥 Perfect for classroom collaboration and testing!")
+        
+    except Exception as e:
+        print(f"\n❌ CRITICAL ERROR: {e}")
+        print("Please check your database connection and try again.")
+        
+    finally:
+        db.close()
+        print("\n👋 Database connection closed. Happy coding!")
+
+if __name__ == "__main__":
+    main()
