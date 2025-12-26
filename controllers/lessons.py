@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from typing import List
 
@@ -19,8 +19,14 @@ def create_lesson(
     db: Session = Depends(get_db),
     current_user: UserModel = Depends(get_current_user)
 ):
+    # Check if user is instructor
+    if current_user.role != "instructor":
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Only instructors can create lessons"
+        )
     
-     # Verify course exists and user owns it
+    # Verify course exists and user owns it
     course = db.query(CourseModel).filter(
         CourseModel.id == course_id,
         CourseModel.instructor_id == current_user.id
@@ -36,15 +42,73 @@ def create_lesson(
     db.refresh(new_lesson)
     return new_lesson
 
-@router.get("/{course_id}", response_model=List[LessonResponse])
-def get_lessons(course_id: int, 
-                db: Session = Depends(get_db),
-                current_user: UserModel = Depends(get_current_user)
-                ):
+@router.get("/{lesson_id}", response_model=LessonResponse)
+def get_lesson(
+    lesson_id: int,
+    db: Session = Depends(get_db)
+):
+    """Get a single lesson by ID - Public endpoint (no authentication required)"""
     
+    lesson = db.query(LessonModel).filter(LessonModel.id == lesson_id).first()
+    
+    if not lesson:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Lesson not found"
+        )
+    
+    return lesson
+
+@router.get("/course/{course_id}/public", response_model=List[LessonResponse])
+def get_lessons_public(
+    course_id: int, 
+    db: Session = Depends(get_db)
+):
+    """Get lessons for a specific course - PUBLIC ENDPOINT (no authentication required)"""
+    
+    # First verify the course exists
+    course = db.query(CourseModel).filter(CourseModel.id == course_id).first()
+    if not course:
+        raise HTTPException(status_code=404, detail="Course not found")
+
+    # Get all lessons for this course
+    lessons = db.query(LessonModel).filter(
+        LessonModel.course_id == course_id
+    ).order_by(LessonModel.order_index).all()
+
+    # Return lesson previews (hide video URLs for non-enrolled users)
+    preview_lessons = []
+    for lesson in lessons:
+        # Create a lesson preview without sensitive content
+        lesson_dict = {
+            "id": lesson.id,
+            "title": lesson.title,
+            "order_index": lesson.order_index,
+            "content_text": f"Preview: {lesson.content_text[:100]}...",  # Truncated preview
+            "video_url": None,  # Hide video URL from public users
+            "course_id": lesson.course_id
+        }
+        preview_lessons.append(lesson_dict)
+    
+    return preview_lessons
+
+@router.get("/course/{course_id}", response_model=List[LessonResponse])
+def get_lessons(
+    course_id: int, 
+    db: Session = Depends(get_db),
+    current_user: UserModel = Depends(get_current_user)
+):
+    """Get lessons for a specific course - Requires authentication and enrollment"""
+    
+    # First verify the course exists
+    course = db.query(CourseModel).filter(CourseModel.id == course_id).first()
+    if not course:
+        raise HTTPException(status_code=404, detail="Course not found")
+
+    # Check if user is enrolled in the course
     enrollment = db.query(EnrollmentModel).filter(
         EnrollmentModel.user_id == current_user.id,
-        EnrollmentModel.course_id == course_id     
+        EnrollmentModel.course_id == course_id      
     ).first()
 
     if not enrollment:
@@ -80,9 +144,16 @@ def update_lesson(
     db: Session = Depends(get_db),
     current_user: UserModel = Depends(get_current_user)
 ):
+    # Check if user is instructor
+    if current_user.role != "instructor":
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Only instructors can update lessons"
+        )
+    
     lesson = db.query(LessonModel).filter(LessonModel.id == lesson_id).first()
     if not lesson:
-        raise HTTPException(status_code=404, detail="Lesson no found")
+        raise HTTPException(status_code=404, detail="Lesson not found")
     
     course = db.query(CourseModel).filter(
         CourseModel.id == lesson.course_id,
@@ -105,6 +176,13 @@ def delete_lesson(
     db: Session = Depends(get_db),
     current_user: UserModel = Depends(get_current_user)
 ):
+    # Check if user is instructor
+    if current_user.role != "instructor":
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Only instructors can delete lessons"
+        )
+    
     lesson = db.query(LessonModel).filter(LessonModel.id == lesson_id).first()
     if not lesson:
         raise HTTPException(status_code=404, detail="Lesson not found")
@@ -119,4 +197,4 @@ def delete_lesson(
     
     db.delete(lesson)
     db.commit()
-    return {"message": "Lesson deleted succesfully"}
+    return {"message": "Lesson deleted successfully"}
