@@ -39,7 +39,8 @@ class UserModel(BaseModel):
         payload = {
             "exp": datetime.now(timezone.utc) + timedelta(days=1),
             "iat": datetime.now(timezone.utc),
-            "sub": str(self.id)
+            "sub": str(self.id),
+            "role": self.role  # Include role in JWT token for enhanced authorization
         }
 
         token = jwt.encode(payload, secret, algorithm="HS256")
