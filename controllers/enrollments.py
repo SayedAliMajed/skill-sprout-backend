@@ -15,6 +15,13 @@ router = APIRouter()
 @router.post("/enroll/{course_id}", response_model=EnrollmentResponseSchema, status_code=status.HTTP_201_CREATED)
 def enroll_in_course(course_id: int, db: Session = Depends(get_db), current_user: UserModel = Depends(get_current_user)):
 
+    # Validate course_id is a positive integer
+    if course_id <= 0:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Invalid course ID. Must be a positive integer.",
+        )
+
     # User role check
     if current_user.role != "student":
         raise HTTPException(
@@ -67,6 +74,13 @@ def enroll_in_course_body(course_data: dict, db: Session = Depends(get_db), curr
             detail="course_id is required in request body"
         )
 
+    # Validate course_id is a positive integer
+    if not isinstance(course_id, int) or course_id <= 0:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Invalid course ID. Must be a positive integer.",
+        )
+
     # check if already enrolled
     existing_enrollment = ( db.query(EnrollmentModel).filter(
             EnrollmentModel.user_id == current_user.id,
@@ -105,6 +119,13 @@ def enroll_in_course_body(course_data: dict, db: Session = Depends(get_db), curr
 @router.get("/course/{course_id}/status")
 def check_enrollment_status(course_id: int, db: Session = Depends(get_db), current_user: UserModel = Depends(get_current_user)):
 
+    # Validate course_id is a positive integer
+    if course_id <= 0:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Invalid course ID. Must be a positive integer.",
+        )
+
     # Check if user is enrolled in the course
     enrollment = ( db.query(EnrollmentModel).filter(
             EnrollmentModel.user_id == current_user.id,
@@ -131,6 +152,13 @@ def get_my_enrollments(db: Session = Depends(get_db), current_user: UserModel = 
 # Update progress percent for an enrollment
 @router.patch("/{enrollment_id}/progress", response_model=EnrollmentResponseSchema)
 def update_progress(enrollment_id: int, progress_data: ProgressUpdateSchema, db: Session = Depends(get_db), current_user: UserModel = Depends(get_current_user)):
+
+    # Validate enrollment_id is a positive integer
+    if enrollment_id <= 0:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Invalid enrollment ID. Must be a positive integer.",
+        )
 
     # get the enrolled course
     enrollment = (db.query(EnrollmentModel).filter(EnrollmentModel.id == enrollment_id).first())

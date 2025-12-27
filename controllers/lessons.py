@@ -12,13 +12,20 @@ from dependencies.get_current_user import get_current_user
 
 router = APIRouter()
 
-@router.post("/courses/{course_id}", response_model=LessonResponse)
+@router.post("/courses/{course_id}/", response_model=LessonResponse)
 def create_lesson(
     course_id: int,
     lesson_in: LessonCreate,
     db: Session = Depends(get_db),
     current_user: UserModel = Depends(get_current_user)
 ):
+    # Validate course_id is a positive integer
+    if course_id <= 0:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Invalid course ID. Must be a positive integer.",
+        )
+    
     # Check if user is instructor
     if current_user.role != "instructor":
         raise HTTPException(
@@ -42,12 +49,19 @@ def create_lesson(
     db.refresh(new_lesson)
     return new_lesson
 
-@router.get("/{lesson_id}", response_model=LessonResponse)
+@router.get("/{lesson_id}/", response_model=LessonResponse)
 def get_lesson(
     lesson_id: int,
     db: Session = Depends(get_db)
 ):
     """Get a single lesson by ID - Public endpoint (no authentication required)"""
+    
+    # Validate lesson_id is a positive integer
+    if lesson_id <= 0:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Invalid lesson ID. Must be a positive integer.",
+        )
     
     lesson = db.query(LessonModel).filter(LessonModel.id == lesson_id).first()
     
@@ -59,12 +73,19 @@ def get_lesson(
     
     return lesson
 
-@router.get("/course/{course_id}/public", response_model=List[LessonResponse])
+@router.get("/course/{course_id}/public/", response_model=List[LessonResponse])
 def get_lessons_public(
     course_id: int, 
     db: Session = Depends(get_db)
 ):
     """Get lessons for a specific course - PUBLIC ENDPOINT (no authentication required)"""
+    
+    # Validate course_id is a positive integer
+    if course_id <= 0:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Invalid course ID. Must be a positive integer.",
+        )
     
     # First verify the course exists
     course = db.query(CourseModel).filter(CourseModel.id == course_id).first()
@@ -92,13 +113,20 @@ def get_lessons_public(
     
     return preview_lessons
 
-@router.get("/course/{course_id}", response_model=List[LessonResponse])
+@router.get("/course/{course_id}/", response_model=List[LessonResponse])
 def get_lessons(
     course_id: int, 
     db: Session = Depends(get_db),
     current_user: UserModel = Depends(get_current_user)
 ):
     """Get lessons for a specific course - Requires authentication and enrollment"""
+    
+    # Validate course_id is a positive integer
+    if course_id <= 0:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Invalid course ID. Must be a positive integer.",
+        )
     
     # First verify the course exists
     course = db.query(CourseModel).filter(CourseModel.id == course_id).first()
@@ -120,30 +148,20 @@ def get_lessons(
 
     return lessons
 
-# New public route for course preview (no enrollment required)
-@router.get("/course/{course_id}/public", response_model=List[LessonResponse])
-def get_public_lessons(course_id: int, db: Session = Depends(get_db)):
-    
-    # Check if course exists
-    course = db.query(CourseModel).filter(CourseModel.id == course_id).first()
-    if not course:
-        raise HTTPException(status_code=404, detail="Course not found")
-    
-    lessons = db.query(LessonModel).filter(
-        LessonModel.course_id == course_id
-    ).order_by(LessonModel.order_index).all()
-
-    # For public view, return lessons but with limited content if needed
-    # You can customize this based on your business logic
-    return lessons
-
-@router.patch("/{lesson_id}", response_model=LessonResponse)
+@router.patch("/{lesson_id}/", response_model=LessonResponse)
 def update_lesson(
     lesson_id: int,
     lesson_update: LessonUpdate,
     db: Session = Depends(get_db),
     current_user: UserModel = Depends(get_current_user)
 ):
+    # Validate lesson_id is a positive integer
+    if lesson_id <= 0:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Invalid lesson ID. Must be a positive integer.",
+        )
+    
     # Check if user is instructor
     if current_user.role != "instructor":
         raise HTTPException(
@@ -170,12 +188,19 @@ def update_lesson(
     db.refresh(lesson)
     return lesson
 
-@router.delete("/{lesson_id}")
+@router.delete("/{lesson_id}/")
 def delete_lesson(
     lesson_id: int,
     db: Session = Depends(get_db),
     current_user: UserModel = Depends(get_current_user)
 ):
+    # Validate lesson_id is a positive integer
+    if lesson_id <= 0:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Invalid lesson ID. Must be a positive integer.",
+        )
+    
     # Check if user is instructor
     if current_user.role != "instructor":
         raise HTTPException(
