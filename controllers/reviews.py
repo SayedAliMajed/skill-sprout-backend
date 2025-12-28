@@ -16,6 +16,13 @@ router = APIRouter()
 @router.post("/{course_id}/reviews", response_model=ReviewResponseSchema, status_code=status.HTTP_200_OK)
 def create_or_update_review(course_id: int, review_data: ReviewCreateSchema, db: Session = Depends(get_db), current_user: UserModel = Depends(get_current_user)):
 
+    # Validate course_id is a positive integer
+    if course_id <= 0:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Invalid course ID. Must be a positive integer.",
+        )
+
     # Check course exists
     course = db.query(CourseModel).filter(CourseModel.id == course_id).first()
     if not course:
@@ -40,7 +47,7 @@ def create_or_update_review(course_id: int, review_data: ReviewCreateSchema, db:
     # Check existing review
     review = (db.query(ReviewModel).filter(
             ReviewModel.course_id == course_id,
-            ReviewModel.user_id == current_user.id,
+            ReviewModel.student_id == current_user.id,
         ).first()
     )
 
@@ -50,7 +57,7 @@ def create_or_update_review(course_id: int, review_data: ReviewCreateSchema, db:
     else:
         review = ReviewModel(
             course_id=course_id,
-            user_id=current_user.id,
+            student_id=current_user.id,
             rating=review_data.rating,
             comment=review_data.comment,
         )
@@ -64,12 +71,19 @@ def create_or_update_review(course_id: int, review_data: ReviewCreateSchema, db:
 @router.get("/{course_id}/reviews")
 def get_course_reviews(course_id: int, db: Session = Depends(get_db)):
     
+    # Validate course_id is a positive integer
+    if course_id <= 0:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Invalid course ID. Must be a positive integer.",
+        )
+    
     # Ensure course exists
     course = db.query(CourseModel).filter(CourseModel.id == course_id).first()
     if not course:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail="Course not found",
+            detail=f"Course with ID {course_id} not found",
         )
 
     reviews = (db.query(ReviewModel).filter(ReviewModel.course_id == course_id).all())
@@ -83,7 +97,7 @@ def get_course_reviews(course_id: int, db: Session = Depends(get_db)):
         "reviews": [
             {
                 "id": review.id,
-                "user_id": review.user_id,
+                "user_id": review.student_id,  # Map student_id to user_id for API consistency
                 "rating": review.rating,
                 "comment": review.comment,
             }

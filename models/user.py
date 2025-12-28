@@ -25,7 +25,7 @@ class UserModel(BaseModel):
 
     courses = relationship("CourseModel", back_populates="instructor")
     enrollments = relationship("EnrollmentModel", back_populates="user")
-    reviews = relationship("ReviewModel", back_populates="user")
+    reviews = relationship("ReviewModel", back_populates="student")
 
     # Method to hash and store the password
     def set_password(self, password: str):

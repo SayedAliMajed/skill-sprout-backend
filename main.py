@@ -1,5 +1,7 @@
-from fastapi import FastAPI
+import logging
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 from controllers.users import router as UserRouter
 from controllers.courses import router as CourseRouter
 from controllers.lessons import router as LessonsRouter
@@ -14,6 +16,10 @@ from models.user import UserModel
 from models.course import CourseModel
 from models.lesson import LessonModel
 from models.category import CategoryModel
+
+# Configure logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 # Create all database tables
 Base.metadata.create_all(bind=engine)
@@ -34,9 +40,16 @@ app.include_router(UserRouter, prefix="/api/users", tags=["Users"])
 app.include_router(CourseRouter, prefix="/api/courses", tags=["Courses"])
 app.include_router(LessonsRouter, prefix="/api/lessons", tags=["Lessons"])
 app.include_router(EnrollmentRouter, prefix="/api/enrollments", tags=["Enrollments"])
-app.include_router(ReviewsRouter, prefix="/api/enrollments", tags=["Enrollments"])
+app.include_router(ReviewsRouter, prefix="/api/reviews", tags=["Reviews"])
 app.include_router(CategoryRouter, prefix="/api/categories", tags=["Categories"])
 
 @app.get('/')
 def home():
     return {'message': 'Welcome to SkillSprout API!'}
+
+@app.middleware("http")
+async def log_requests(request, call_next):
+    logger.info(f"Request: {request.method} {request.url}")
+    response = await call_next(request)
+    logger.info(f"Response: {response.status_code}")
+    return response
