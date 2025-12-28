@@ -1,6 +1,34 @@
-# Skill Sprout Backend
+# 🌱 Skill Sprout Backend
 
-A FastAPI backend application with PostgreSQL database and JWT authentication.
+[![FastAPI](https://img.shields.io/badge/FastAPI-009688?style=for-the-badge&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-336791?style=for-the-badge&logo=postgresql&logoColor=white)](https://www.postgresql.org/)
+[![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
+
+A modern, scalable FastAPI backend application for an online learning platform, featuring PostgreSQL database, JWT authentication, and comprehensive course management system.
+
+## 👥 Team
+
+| Sayed Ali | Abdulla Mohammed | Ali Hassan Salman |
+|-----------|------------------|-------------------|
+| Team Leader & Full-Stack Developer | Full-Stack Developer | Full-Stack Developer |
+
+## ✨ Features
+
+- 🔐 **JWT Authentication** - Secure user authentication and authorization
+- 📚 **Course Management** - Complete CRUD operations for courses, categories, and lessons
+- 👥 **User Management** - User registration, login, and profile management
+- 📝 **Review System** - Course reviews and ratings
+- 🎓 **Enrollment System** - Course enrollment and progress tracking
+- 🔄 **Database Migrations** - Automated database schema management with Alembic
+- 📊 **RESTful API** - Well-documented API endpoints with OpenAPI/Swagger
+- 🛡️ **Security** - Password hashing, CORS configuration, and secure practices
+
+## 📖 API Documentation
+
+Once the server is running, you can access:
+- **Swagger UI**: `http://localhost:8000/docs`
+- **ReDoc**: `http://localhost:8000/redoc`
+- **OpenAPI Schema**: `http://localhost:8000/openapi.json`
 
 ## Setup Instructions
 
@@ -55,25 +83,50 @@ The API will be available at `http://localhost:8000`
 - `POST /api/register` - Register a new user
 - `POST /api/login` - Login and get JWT token
 
-## Project Structure
+## 📁 Project Structure
 
 ```
-.
-├── config/
-│   └── environment.py      # Environment variable configuration
-├── controllers/
-│   └── users.py            # User route handlers
-├── dependencies/
-│   └── get_current_user.py # JWT authentication dependency
-├── models/
-│   ├── base.py             # Base model with common fields
-│   └── user.py             # User model
-├── serializers/
-│   └── user.py             # Pydantic schemas for validation
-├── database.py             # Database configuration
-├── main.py                 # FastAPI application entry point
-└── Pipfile                 # Python dependencies
-
+skill-sprout-backend/
+├── 📂 alembic/                    # Database migration files
+│   ├── env.py.example
+│   └── versions/
+├── 📂 config/                     # Configuration files
+│   ├── environment.py            # Environment variables
+│   └── environment.py.example    # Environment template
+├── 📂 controllers/                # API route handlers
+│   ├── categories.py             # Category endpoints
+│   ├── courses.py                # Course endpoints
+│   ├── enrollments.py            # Enrollment endpoints
+│   ├── lessons.py                # Lesson endpoints
+│   ├── reviews.py                # Review endpoints
+│   └── users.py                  # User endpoints
+├── 📂 dependencies/               # FastAPI dependencies
+│   └── get_current_user.py       # JWT authentication
+├── 📂 middleware/                 # Custom middleware
+│   └── redirect_handler.py       # Request redirect handling
+├── 📂 models/                     # SQLAlchemy models
+│   ├── base.py                   # Base model class
+│   ├── category.py               # Category model
+│   ├── course.py                 # Course model
+│   ├── enrollment.py             # Enrollment model
+│   ├── lesson.py                 # Lesson model
+│   ├── review.py                 # Review model
+│   └── user.py                   # User model
+├── 📂 serializers/                # Pydantic schemas
+│   ├── category.py               # Category schemas
+│   ├── course.py                 # Course schemas
+│   ├── enrollment.py             # Enrollment schemas
+│   ├── lesson.py                 # Lesson schemas
+│   ├── review.py                 # Review schemas
+│   └── user.py                   # User schemas
+├── 📄 add_lesson_videos.py        # Utility script
+├── 📄 alembic.ini                # Alembic configuration
+├── 📄 database.py                # Database connection
+├── 📄 debug_json_error.py        # Debug utility
+├── 📄 main.py                    # FastAPI application
+├── 📄 Pipfile                    # Python dependencies
+├── 📄 README.md                  # This file
+└── 📄 seed_data.py               # Database seeding script
 ```
 
 ## Database Migrations
@@ -91,12 +144,35 @@ alembic revision --autogenerate -m "description"
 alembic upgrade head
 ```
 
-## Technologies Used
+## 🤝 Contributing
 
-- **FastAPI** - Modern web framework
-- **SQLAlchemy 2.0** - ORM with DeclarativeBase pattern
-- **PostgreSQL** - Database
-- **Pydantic** - Data validation
-- **python-jose** - JWT token handling
-- **passlib** - Password hashing with bcrypt
-- **Alembic** - Database migrations
+We welcome contributions! Please follow these steps:
+
+1. **Fork** the repository
+2. **Create** a feature branch (`git checkout -b feature/AmazingFeature`)
+3. **Commit** your changes (`git commit -m 'Add some AmazingFeature'`)
+4. **Push** to the branch (`git push origin feature/AmazingFeature`)
+5. **Open** a Pull Request
+
+### Development Guidelines
+
+- Follow PEP 8 style guidelines
+- Write clear, concise commit messages
+- Add tests for new features
+- Update documentation as needed
+- Ensure all tests pass before submitting PR
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 📞 Support
+
+If you have any questions or need help, please reach out to the team:
+
+- **Sayed Ali** - [GitHub Profile](https://github.com/SayedAliMajed)
+- **Project Repository** - [Skill Sprout Backend](https://github.com/SayedAliMajed/skill-sprout-backend)
+
+---
+
+<p align="center">Made with ❤️ by the Skill Sprout Team</p>
