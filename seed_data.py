@@ -18,17 +18,13 @@ def seed_data():
     db = SessionLocal()
     
     try:
-        print("🌱 Starting to seed database...")
-        
         # Clear existing data (in reverse order to avoid foreign key issues)
-        print("🧹 Clearing existing data...")
         db.query(CourseModel).delete()
         db.query(CategoryModel).delete()
         db.query(UserModel).delete()
         db.commit()
         
         # Create Categories
-        print("📚 Creating categories...")
         categories_data = [
             {
                 "name": "Programming Fundamentals",
@@ -98,12 +94,10 @@ def seed_data():
             db.add(category)
             db.flush()  # Get the ID
             categories.append(category)
-            print(f"   ✅ Created category: {category.name}")
         
         db.commit()
         
         # Create Instructor Users
-        print("👨‍🏫 Creating instructor users...")
         instructors_data = [
             {
                 "username": "mosh_hamidai",
@@ -185,7 +179,6 @@ def seed_data():
             db.add(instructor)
             db.flush()
             instructors.append(instructor)
-            print(f"   ✅ Created instructor: {instructor.first_name} {instructor.last_name}")
         
         db.commit()
         
@@ -194,7 +187,6 @@ def seed_data():
             return f"https://img.youtube.com/vi/{video_id}/hqdefault.jpg"
         
         # Create Courses with Real YouTube Data
-        print("🎓 Creating courses with real YouTube data...")
         courses_data = [
             # Programming Fundamentals
             {
@@ -352,4 +344,32 @@ def seed_data():
             {
                 "instructor_id": 7,  # Mike
                 "category_id": 9,    # Graphic Design
-                "title": "Photoshop Masterclass - Beginner to
+                "title": "Photoshop Masterclass - Beginner to Advanced",
+                "description": "Learn Adobe Photoshop from scratch! Master photo editing, digital art, and design techniques. Perfect for beginners to advanced users.",
+                "price": 49.99,
+                "thumbnail_url": get_youtube_thumbnail("UtFi7IHP7l4")
+            },
+            {
+                "instructor_id": 7,  # Mike
+                "category_id": 9,    # Graphic Design
+                "title": "Illustrator Masterclass",
+                "description": "Master Adobe Illustrator for vector graphics, logo design, and digital illustration. Perfect for designers and artists.",
+                "price": 54.99,
+                "thumbnail_url": get_youtube_thumbnail("some_video_id")
+            }
+        ]
+        
+        courses = []
+        for course_data in courses_data:
+            course = CourseModel(**course_data)
+            db.add(course)
+            db.flush()
+            courses.append(course)
+        
+        db.commit()
+
+    except Exception as e:
+        db.rollback()
+        raise
+    finally:
+        db.close()
